@@ -121,8 +121,8 @@ def infer_allowed_main_mask(family: str) -> tuple[int, int, int]:
 def infer_sample_group_id(relative_path: str, source_kind: str, family: str, concentration_level: str) -> str:
     parts = relative_path.split("/")
     target_text = ""
-    if source_kind == "raw" and len(parts) >= 3:
-        target_text = parts[2]
+    if source_kind == "raw" and len(parts) >= 2:
+        target_text = parts[-2]
     elif source_kind == "average":
         target_text = Path(parts[-1]).stem
     if target_text:
