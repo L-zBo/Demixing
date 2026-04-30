@@ -17,3 +17,6 @@ outputs/
 .DS_Store
 Thumbs.db
 .vscode/
+
+# Local tool state
+.spec-workflow/
