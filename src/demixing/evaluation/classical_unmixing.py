@@ -5,12 +5,13 @@ from typing import Literal
 
 import numpy as np
 import pandas as pd
-from scipy.optimize import nnls
+from scipy.optimize import linear_sum_assignment, minimize, nnls
+from sklearn.decomposition import NMF as SklearnNMF
 
 from demixing.data.endmembers import EndmemberLibrary
 
 
-UnmixingMethod = Literal["ols", "nnls"]
+UnmixingMethod = Literal["ols", "nnls", "fcls"]
 
 
 @dataclass(frozen=True)
@@ -36,6 +37,32 @@ class ClassicalUnmixingResult:
             }
             for component_index, name in enumerate(self.component_names):
                 row[f"coef_{name}"] = float(self.coefficients[index, component_index])
+                row[f"abundance_{name}"] = float(self.abundances[index, component_index])
+            rows.append(row)
+        return pd.DataFrame(rows)
+
+
+@dataclass(frozen=True)
+class BlindNMFResult:
+    component_names: tuple[str, ...]
+    abundances: np.ndarray
+    reconstructed: np.ndarray
+    endmember_matrix: np.ndarray
+    residual_l2: np.ndarray
+    residual_rmse: np.ndarray
+    residual_r2: np.ndarray
+
+    def to_frame(self) -> pd.DataFrame:
+        rows: list[dict[str, float | int | str]] = []
+        for index in range(self.abundances.shape[0]):
+            row: dict[str, float | int | str] = {
+                "spectrum_index": index,
+                "method": "nmf",
+                "residual_l2": float(self.residual_l2[index]),
+                "residual_rmse": float(self.residual_rmse[index]),
+                "residual_r2": float(self.residual_r2[index]),
+            }
+            for component_index, name in enumerate(self.component_names):
                 row[f"abundance_{name}"] = float(self.abundances[index, component_index])
             rows.append(row)
         return pd.DataFrame(rows)
@@ -91,7 +118,30 @@ def solve_single_spectrum(
     if method == "ols":
         coefficients, _, _, _ = np.linalg.lstsq(matrix, spectrum, rcond=None)
         return coefficients.astype(np.float32, copy=False)
-    raise ValueError(f"Unsupported method={method!r}. Expected 'ols' or 'nnls'.")
+    if method == "fcls":
+        initial, _ = nnls(matrix, spectrum)
+        initial_sum = float(initial.sum())
+        if initial_sum > 0:
+            x0 = initial / initial_sum
+        else:
+            x0 = np.full(matrix.shape[1], 1.0 / matrix.shape[1], dtype=np.float32)
+
+        def objective(coefficients: np.ndarray) -> float:
+            residual = matrix @ coefficients - spectrum
+            return 0.5 * float(np.dot(residual, residual))
+
+        result = minimize(
+            objective,
+            x0=x0,
+            method="SLSQP",
+            bounds=[(0.0, None)] * matrix.shape[1],
+            constraints=[{"type": "eq", "fun": lambda values: float(np.sum(values) - 1.0)}],
+            options={"maxiter": 200, "ftol": 1e-9},
+        )
+        if result.success:
+            return np.clip(result.x, 0.0, None).astype(np.float32, copy=False)
+        return x0.astype(np.float32, copy=False)
+    raise ValueError(f"Unsupported method={method!r}. Expected 'ols', 'nnls', or 'fcls'.")
 
 
 def unmix_spectra(
@@ -120,3 +170,82 @@ def unmix_spectra(
         residual_rmse=residual_rmse,
         residual_r2=residual_r2,
     )
+
+
+def blind_nmf_unmix_spectra(
+    spectra: np.ndarray,
+    n_components: int,
+    random_state: int = 0,
+    max_iter: int = 3000,
+) -> BlindNMFResult:
+    spectra = _ensure_2d_spectra(spectra)
+    if n_components <= 0:
+        raise ValueError("n_components must be positive.")
+
+    nonnegative_spectra = np.clip(spectra, 0.0, None)
+    model = SklearnNMF(
+        n_components=n_components,
+        init="nndsvda",
+        random_state=random_state,
+        max_iter=max_iter,
+    )
+    coefficients = model.fit_transform(nonnegative_spectra).astype(np.float32, copy=False)
+    reconstructed = model.inverse_transform(coefficients).astype(np.float32, copy=False)
+    endmember_matrix = model.components_.T.astype(np.float32, copy=False)
+    residual = nonnegative_spectra - reconstructed
+    residual_l2 = np.linalg.norm(residual, axis=1).astype(np.float32)
+    residual_rmse = np.sqrt(np.mean(residual * residual, axis=1)).astype(np.float32)
+    residual_r2 = _compute_r2(nonnegative_spectra, reconstructed).astype(np.float32)
+    abundances = _normalize_coefficients(coefficients)
+    component_names = tuple(f"nmf_{index + 1}" for index in range(n_components))
+    return BlindNMFResult(
+        component_names=component_names,
+        abundances=abundances,
+        reconstructed=reconstructed,
+        endmember_matrix=endmember_matrix,
+        residual_l2=residual_l2,
+        residual_rmse=residual_rmse,
+        residual_r2=residual_r2,
+    )
+
+
+def align_blind_nmf_to_reference(
+    result: BlindNMFResult,
+    reference_library: EndmemberLibrary,
+) -> tuple[BlindNMFResult, pd.DataFrame]:
+    if result.endmember_matrix.shape[1] != reference_library.n_endmembers:
+        raise ValueError(
+            "Blind NMF component count does not match reference library size: "
+            f"{result.endmember_matrix.shape[1]} vs {reference_library.n_endmembers}"
+        )
+    if result.endmember_matrix.shape[0] != reference_library.n_points:
+        raise ValueError(
+            "Blind NMF spectrum length does not match reference library length: "
+            f"{result.endmember_matrix.shape[0]} vs {reference_library.n_points}"
+        )
+
+    blind = result.endmember_matrix.astype(np.float64, copy=False)
+    reference = reference_library.matrix.astype(np.float64, copy=False)
+    blind_norm = np.linalg.norm(blind, axis=0, keepdims=True)
+    reference_norm = np.linalg.norm(reference, axis=0, keepdims=True)
+    similarity = (blind.T @ reference) / np.maximum(blind_norm.T @ reference_norm, 1e-12)
+    row_ind, col_ind = linear_sum_assignment(-similarity)
+
+    order = [row for _, row in sorted(zip(col_ind.tolist(), row_ind.tolist()))]
+    ordered_names = tuple(reference_library.names[index] for index in sorted(col_ind.tolist()))
+    aligned = BlindNMFResult(
+        component_names=ordered_names,
+        abundances=result.abundances[:, order].astype(np.float32, copy=False),
+        reconstructed=result.reconstructed,
+        endmember_matrix=result.endmember_matrix[:, order].astype(np.float32, copy=False),
+        residual_l2=result.residual_l2,
+        residual_rmse=result.residual_rmse,
+        residual_r2=result.residual_r2,
+    )
+
+    similarity_df = pd.DataFrame(
+        similarity,
+        index=result.component_names,
+        columns=reference_library.names,
+    )
+    return aligned, similarity_df
