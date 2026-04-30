@@ -299,6 +299,152 @@ def plot_prediction_map(df: pd.DataFrame, output_path: Path, title: str = "Predi
     plt.close(fig)
 
 
+def _spatial_coordinate_frame(df: pd.DataFrame) -> pd.DataFrame:
+    coord_df = df.copy()
+    if "x_idx" in coord_df.columns and "y_idx" in coord_df.columns:
+        coord_df = coord_df.dropna(subset=["x_idx", "y_idx"]).copy()
+        coord_df["x_idx"] = coord_df["x_idx"].astype(int)
+        coord_df["y_idx"] = coord_df["y_idx"].astype(int)
+        return coord_df
+
+    if "relative_path" not in coord_df.columns:
+        return coord_df.iloc[0:0].copy()
+
+    coords = []
+    for rel in coord_df["relative_path"]:
+        name = Path(str(rel)).name
+        match_x = re.search(r"-X(\d+)-", name)
+        match_y = re.search(r"-Y(\d+)-", name)
+        if match_x is None or match_y is None:
+            coords.append((None, None))
+        else:
+            coords.append((int(match_x.group(1)), int(match_y.group(1))))
+    coord_df["x_idx"] = [x for x, _ in coords]
+    coord_df["y_idx"] = [y for _, y in coords]
+    coord_df = coord_df.dropna(subset=["x_idx", "y_idx"]).copy()
+    coord_df["x_idx"] = coord_df["x_idx"].astype(int)
+    coord_df["y_idx"] = coord_df["y_idx"].astype(int)
+    return coord_df
+
+
+def _spatial_grid(df: pd.DataFrame, value_col: str) -> np.ndarray | None:
+    coord_df = _spatial_coordinate_frame(df)
+    if coord_df.empty or value_col not in coord_df.columns:
+        return None
+    grid = coord_df.pivot_table(index="y_idx", columns="x_idx", values=value_col, aggfunc="mean")
+    grid = grid.sort_index(ascending=False)
+    return grid.to_numpy(dtype=float)
+
+
+def plot_spatial_value_map(
+    df: pd.DataFrame,
+    value_col: str,
+    output_path: Path,
+    title: str,
+    cmap: str = "viridis",
+    vmin: float | None = None,
+    vmax: float | None = None,
+    colorbar_label: str | None = None,
+) -> None:
+    ensure_parent(output_path)
+    grid = _spatial_grid(df, value_col)
+    if grid is None:
+        return
+    fig, ax = plt.subplots(figsize=(6, 5))
+    im = ax.imshow(grid, cmap=cmap, vmin=vmin, vmax=vmax)
+    ax.set_title(title)
+    ax.set_xlabel("X")
+    ax.set_ylabel("Y")
+    cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
+    if colorbar_label is not None:
+        cbar.set_label(colorbar_label)
+    fig.tight_layout()
+    fig.savefig(output_path)
+    plt.close(fig)
+
+
+def plot_abundance_maps(
+    df: pd.DataFrame,
+    component_names: list[str] | tuple[str, ...],
+    output_path: Path,
+    title: str = "Abundance maps",
+) -> None:
+    ensure_parent(output_path)
+    grids = []
+    labels = []
+    for name in component_names:
+        value_col = f"abundance_{name}"
+        grid = _spatial_grid(df, value_col)
+        if grid is None:
+            continue
+        grids.append(grid)
+        labels.append(name)
+    if not grids:
+        return
+
+    n_cols = len(grids)
+    fig, axes = plt.subplots(1, n_cols, figsize=(4.4 * n_cols, 4.2), squeeze=False)
+    for ax, grid, label in zip(axes[0], grids, labels):
+        im = ax.imshow(grid, cmap="magma", vmin=0.0, vmax=1.0)
+        ax.set_title(f"{label} abundance")
+        ax.set_xlabel("X")
+        ax.set_ylabel("Y")
+        fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
+    fig.suptitle(title)
+    fig.tight_layout()
+    fig.savefig(output_path)
+    plt.close(fig)
+
+
+def plot_residual_map(
+    df: pd.DataFrame,
+    output_path: Path,
+    title: str = "Residual RMSE map",
+    value_col: str = "residual_rmse",
+) -> None:
+    plot_spatial_value_map(
+        df,
+        value_col=value_col,
+        output_path=output_path,
+        title=title,
+        cmap="inferno",
+        vmin=0.0,
+        colorbar_label=value_col,
+    )
+
+
+def plot_spectrum_reconstruction_examples(
+    axis: np.ndarray,
+    spectra: np.ndarray,
+    reconstructed: np.ndarray,
+    output_path: Path,
+    labels: list[str] | None = None,
+    max_examples: int = 6,
+) -> None:
+    ensure_parent(output_path)
+    if spectra.size == 0 or reconstructed.size == 0:
+        return
+    n_examples = min(max_examples, spectra.shape[0])
+    if n_examples <= 0:
+        return
+
+    pick = np.linspace(0, spectra.shape[0] - 1, n_examples, dtype=int)
+    fig, axes = plt.subplots(n_examples, 1, figsize=(10, 2.2 * n_examples), sharex=True)
+    if n_examples == 1:
+        axes = [axes]
+    for ax, idx in zip(axes, pick):
+        ax.plot(axis, spectra[idx], label="input", linewidth=1.3)
+        ax.plot(axis, reconstructed[idx], label="reconstruction", linewidth=1.3, alpha=0.85)
+        label = labels[idx] if labels is not None and idx < len(labels) else f"spectrum_{idx}"
+        ax.set_title(str(label))
+        ax.grid(alpha=0.25)
+    axes[0].legend(loc="upper right")
+    axes[-1].set_xlabel("Raman Shift (cm^-1)")
+    fig.tight_layout()
+    fig.savefig(output_path)
+    plt.close(fig)
+
+
 def save_experiment_summary(summary: dict[str, object], output_path: Path) -> None:
     ensure_parent(output_path)
     output_path.write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
