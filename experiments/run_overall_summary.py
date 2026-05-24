@@ -28,17 +28,17 @@ if str(ROOT) not in sys.path:
 
 SHOWCASE = ROOT / "outputs/showcase"
 
-V9_SYNTHETIC = SHOWCASE / "synthetic_truth/synthetic_method_comparison_summary.csv"
+V9_SYNTHETIC = SHOWCASE / "synthetic_method_comparison/synthetic_method_comparison_summary.csv"
 V8_REAL_BATCH = SHOWCASE / "method_comparison/batch_method_comparison_summary.csv"
-V13_CONSTRAINT = SHOWCASE / "method_constraints/method_constraint_summary.csv"
-V13_NMF_SAM = SHOWCASE / "method_constraints/nmf_endmember_sam.csv"
-V13_NNLS_SPARSITY = SHOWCASE / "method_constraints/nnls_sparsity_summary.csv"
+V13_CONSTRAINT = SHOWCASE / "method_constraint_diagnostics/method_constraint_summary.csv"
+V13_NMF_SAM = SHOWCASE / "method_constraint_diagnostics/nmf_endmember_sam.csv"
+V13_NNLS_SPARSITY = SHOWCASE / "method_constraint_diagnostics/nnls_sparsity_summary.csv"
 
 V14_R2 = SHOWCASE / "protocol_consistency/protocol_reconstruction_r2_summary.csv"
 V14_CONSISTENCY = SHOWCASE / "protocol_consistency/protocol_consistency_summary.csv"
 V14_RETENTION = SHOWCASE / "protocol_consistency/fingerprint_retention_summary.csv"
 
-MCR_CHECK_FORMAL_V1 = ROOT / "outputs/experiments/mcr_als_check_formal_v1/mcr_als_check_summary.csv"
+MCR_CHECK_FORMAL_V1 = ROOT / "outputs/experiments/mcr_als_check/mcr_als_check_summary.csv"
 PRISM_REAL_CHECK = ROOT / "outputs/experiments/prism_real_check"
 PRISM_ABSENT_CHECK = ROOT / "outputs/experiments/prism_absent_check/prism_absent_check_summary.csv"
 
@@ -149,7 +149,7 @@ def build_demixing_summary() -> pd.DataFrame:
 
 
 def build_seven_method_synthetic_summary() -> pd.DataFrame:
-    """7-method horizontal comparison on synthetic NOISY 40×40 from mcr_als_check_formal_v1.
+    """7-method horizontal comparison on synthetic NOISY 40×40 from mcr_als_check.
 
     Methods (column order): OLS / NNLS / FCLS / NMF / MCR-ALS hard / MCR-ALS semi-blind / PRISM.
     MCR-ALS hard-sum1 and hard-nnls are mathematically equivalent to NNLS in this setup;

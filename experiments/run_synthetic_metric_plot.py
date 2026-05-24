@@ -6,10 +6,10 @@ chart.
 
 Outputs
 -------
-- ``outputs/experiments/formal_v9_synthetic_method_comparison/synthetic_method_comparison_summary.csv`` (in-place augment)
-- ``outputs/experiments/formal_v9_synthetic_method_comparison/synthetic_metric_comparison.png`` (new)
-- ``outputs/showcase/synthetic_truth/synthetic_method_comparison_summary.csv`` (mirror)
-- ``outputs/showcase/synthetic_truth/synthetic_metric_comparison.png`` (mirror)
+- ``outputs/experiments/synthetic_method_comparison/synthetic_method_comparison_summary.csv`` (in-place augment)
+- ``outputs/experiments/synthetic_method_comparison/synthetic_metric_comparison.png`` (new)
+- ``outputs/showcase/synthetic_method_comparison/synthetic_method_comparison_summary.csv`` (mirror)
+- ``outputs/showcase/synthetic_method_comparison/synthetic_metric_comparison.png`` (mirror)
 """
 from __future__ import annotations
 
@@ -28,17 +28,17 @@ from visualization.method_comparison import plot_synthetic_metric_subplots
 
 DEFAULT_SOURCE_CSV = (
     ROOT
-    / "outputs/experiments/formal_v9_synthetic_method_comparison/synthetic_method_comparison_summary.csv"
+    / "outputs/experiments/synthetic_method_comparison/synthetic_method_comparison_summary.csv"
 )
 DEFAULT_OUTPUT_FIG = (
     ROOT
-    / "outputs/experiments/formal_v9_synthetic_method_comparison/synthetic_metric_comparison.png"
+    / "outputs/experiments/synthetic_method_comparison/synthetic_metric_comparison.png"
 )
 SHOWCASE_CSV = (
-    ROOT / "outputs/showcase/synthetic_truth/synthetic_method_comparison_summary.csv"
+    ROOT / "outputs/showcase/synthetic_method_comparison/synthetic_method_comparison_summary.csv"
 )
 SHOWCASE_FIG = (
-    ROOT / "outputs/showcase/synthetic_truth/synthetic_metric_comparison.png"
+    ROOT / "outputs/showcase/synthetic_method_comparison/synthetic_metric_comparison.png"
 )
 
 

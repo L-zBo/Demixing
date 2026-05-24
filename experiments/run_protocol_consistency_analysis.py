@@ -71,7 +71,7 @@ FINGERPRINT_PEAKS: dict[str, tuple[int, ...]] = {
 PEAK_HALF_WINDOW_CM1 = 15  # search +/- 15 cm-1 for the local max
 
 PROTOCOLS = ("als_l2", "als_max", "none_l2")
-DEFAULT_OUTPUT_ROOT = ROOT / "outputs/experiments/formal_v14_protocol_consistency"
+DEFAULT_OUTPUT_ROOT = ROOT / "outputs/experiments/protocol_consistency"
 SHOWCASE_OUTPUT_ROOT = ROOT / "outputs/showcase/protocol_consistency"
 
 

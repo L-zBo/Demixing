@@ -37,7 +37,7 @@ DEFAULT_SAMPLE_DIRS = [
     Path(PP_STARCH_DIR) / "1 785mw 2s 2 2 40 40",
     Path("test") / PP_PE_STARCH_DIR / "1 785mw 2s 1 1 40 40",
 ]
-DEFAULT_OUTPUT_ROOT = ROOT / "outputs/experiments/formal_v8_batch_method_comparison"
+DEFAULT_OUTPUT_ROOT = ROOT / "outputs/experiments/batch_method_comparison"
 
 
 def parse_args() -> argparse.Namespace:

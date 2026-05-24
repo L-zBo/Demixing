@@ -8,7 +8,7 @@ Outputs
 - ``nmf_endmember_sam.csv``: per (label, component) SAM (rad) of NMF vs ref.
 - ``negative_coef_fraction_bars.png`` and ``nmf_endmember_sam_bars.png``.
 
-Read-only on dataset/. Mirrors final artefacts to ``outputs/showcase/method_constraints/``
+Read-only on dataset/. Mirrors final artefacts to ``outputs/showcase/method_constraint_diagnostics/``
 unless ``--no-showcase`` is passed.
 """
 from __future__ import annotations
@@ -108,8 +108,8 @@ DIAGNOSTIC_PRESETS: list[dict[str, object]] = [
         "components": ("PP", "starch"),
     },
 ]
-DEFAULT_OUTPUT_ROOT = ROOT / "outputs/experiments/formal_v13_method_constraint_diagnostics"
-SHOWCASE_OUTPUT_ROOT = ROOT / "outputs/showcase/method_constraints"
+DEFAULT_OUTPUT_ROOT = ROOT / "outputs/experiments/method_constraint_diagnostics"
+SHOWCASE_OUTPUT_ROOT = ROOT / "outputs/showcase/method_constraint_diagnostics"
 ACTIVE_THRESHOLD = 0.05
 
 
@@ -129,7 +129,7 @@ def parse_args() -> argparse.Namespace:
         help="Relative-abundance threshold above which an endmember is counted as 'active' for sparsity.",
     )
     parser.add_argument("--limit", type=int, default=None)
-    parser.add_argument("--no-showcase", action="store_true", help="Skip mirroring artefacts to outputs/showcase/method_constraints/.")
+    parser.add_argument("--no-showcase", action="store_true", help="Skip mirroring artefacts to outputs/showcase/method_constraint_diagnostics/.")
     return parser.parse_args()
 
 

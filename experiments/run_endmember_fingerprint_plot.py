@@ -4,7 +4,7 @@ Single-figure script for the PPT "physical basis" slide. Loads the three
 endmembers under the default ALS+L2 protocol and overlays them with literature
 peak annotations.
 
-Read-only on dataset/. Outputs to ``outputs/experiments/formal_v15_endmember_fingerprint``
+Read-only on dataset/. Outputs to ``outputs/experiments/endmember_fingerprint``
 and mirrors to ``outputs/showcase/endmember_fingerprint``.
 """
 from __future__ import annotations
@@ -34,7 +34,7 @@ DEFAULT_FINGERPRINT_PEAKS: dict[str, tuple[int, ...]] = {
     "starch": (478, 1124),
 }
 
-DEFAULT_OUTPUT_ROOT = ROOT / "outputs/experiments/formal_v15_endmember_fingerprint"
+DEFAULT_OUTPUT_ROOT = ROOT / "outputs/experiments/endmember_fingerprint"
 SHOWCASE_OUTPUT_ROOT = ROOT / "outputs/showcase/endmember_fingerprint"
 
 

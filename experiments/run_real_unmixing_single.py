@@ -39,7 +39,7 @@ PP_STARCH_DIR = "PP+\u6dc0\u7c89"
 PP_PE_STARCH_DIR = "PP+PE+\u6dc0\u7c89"
 
 DEFAULT_SAMPLE_DIR = Path(PE_STARCH_DIR) / "1 785mw 2s 2 2 40 40"
-DEFAULT_OUTPUT_ROOT = ROOT / "outputs/experiments/formal_v6_classical_unmixing_real"
+DEFAULT_OUTPUT_ROOT = ROOT / "outputs/experiments/classical_unmixing_real"
 
 
 def parse_args() -> argparse.Namespace:
@@ -173,7 +173,7 @@ def main() -> None:
         }
         dominant_counts = prediction_df["dominant_component"].value_counts().to_dict()
         summary = {
-            "experiment": "formal_v6_classical_unmixing_real",
+            "experiment": "classical_unmixing_real",
             "sample_dir": sample_dir.as_posix(),
             "method": args.method,
             "feature_mode": args.feature_mode,
@@ -232,7 +232,7 @@ def main() -> None:
         }
         dominant_counts = prediction_df["dominant_component"].value_counts().to_dict()
         summary = {
-            "experiment": "formal_v6_classical_unmixing_real",
+            "experiment": "classical_unmixing_real",
             "sample_dir": sample_dir.as_posix(),
             "method": args.method,
             "feature_mode": args.feature_mode,

@@ -34,7 +34,7 @@ PP_STARCH_DIR = "PP+\u6dc0\u7c89"
 PP_PE_STARCH_DIR = "PP+PE+\u6dc0\u7c89"
 
 DEFAULT_SAMPLE_DIR = Path(PE_STARCH_DIR) / "1 785mw 2s 2 2 40 40"
-DEFAULT_OUTPUT_ROOT = ROOT / "outputs/experiments/formal_v7_method_comparison_real"
+DEFAULT_OUTPUT_ROOT = ROOT / "outputs/experiments/method_comparison_real"
 
 
 def parse_args() -> argparse.Namespace:

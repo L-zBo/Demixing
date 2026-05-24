@@ -42,7 +42,7 @@ GENERALIZATION_PRESETS: list[dict[str, object]] = [
     {"sample_dir": Path("泛化/甘汁园小麦淀粉/PE+淀粉/1 785mw 2s 2 2 40 40"), "matched_starch": "甘汁园小麦淀粉", "components": ("PE", "starch")},
     {"sample_dir": Path("泛化/甘汁园小麦淀粉/PP+淀粉/1 785mw 2s 2 2 40 40"), "matched_starch": "甘汁园小麦淀粉", "components": ("PP", "starch")},
 ]
-DEFAULT_OUTPUT_ROOT = ROOT / "outputs/experiments/formal_v12_generalization_batch"
+DEFAULT_OUTPUT_ROOT = ROOT / "outputs/experiments/generalization_batch"
 
 
 def parse_args() -> argparse.Namespace:

@@ -22,7 +22,7 @@ from unmixing.unmix import (
 
 
 DEFAULT_SYNTHETIC_ROOT = ROOT / "outputs/synthetic_unmixing/smoke_test_als_l2"
-DEFAULT_OUTPUT_ROOT = ROOT / "outputs/experiments/formal_v9_synthetic_method_comparison"
+DEFAULT_OUTPUT_ROOT = ROOT / "outputs/experiments/synthetic_method_comparison"
 
 
 def parse_args() -> argparse.Namespace:
