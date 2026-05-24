@@ -5,15 +5,30 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from experiments._plot_style import apply_paper_style, save_figure
+from visualization import apply_paper_style, plot_tv_iters_tradeoff
+
+
+def write_summary(df: pd.DataFrame, datasets: list[tuple[str, str]], out_path: Path) -> None:
+    rows = []
+    for ds, ds_label in datasets:
+        sub = df[df["dataset"] == ds]
+        for ltv in sorted(sub["lambda_tv"].unique()):
+            slc = sub[sub["lambda_tv"] == ltv].sort_values("tv_iters")
+            row = {"dataset": ds_label, "lambda_tv": ltv}
+            for _, r in slc.iterrows():
+                ti = int(r["tv_iters"])
+                row[f"mae_iter{ti}"] = round(float(r["mae"]), 4)
+                row[f"pearson_iter{ti}"] = round(float(r["pearson_r"]), 3)
+            rows.append(row)
+    summary = pd.DataFrame(rows)
+    summary.to_csv(out_path, index=False, encoding="utf-8-sig")
+    print(f"Saved {out_path.relative_to(ROOT)}")
 
 
 def main() -> None:
@@ -29,52 +44,8 @@ def main() -> None:
 
     datasets = [("formal_v1_als_l2", "NOISY 40×40"),
                 ("formal_v1_clean_als_l2", "CLEAN 40×40")]
-    metrics = [("mae", "MAE ↓", "lower better"),
-               ("pearson_r", "Pearson r ↑", "higher better"),
-               ("spatial_tv", "Spatial TV ↓", "lower better")]
-
-    fig, axes = plt.subplots(len(metrics), len(datasets), figsize=(11, 9), sharex=True)
-
-    for col, (ds, ds_label) in enumerate(datasets):
-        sub = df[df["dataset"] == ds]
-        lambda_tvs = sorted(sub["lambda_tv"].unique())
-        cmap = plt.cm.viridis(np.linspace(0.1, 0.9, len(lambda_tvs)))
-        for row, (metric, ylabel, _) in enumerate(metrics):
-            ax = axes[row, col]
-            for color, ltv in zip(cmap, lambda_tvs):
-                slc = sub[sub["lambda_tv"] == ltv].sort_values("tv_iters")
-                ax.plot(slc["tv_iters"], slc[metric], "o-",
-                        color=color, label=f"λ_TV={ltv}")
-            ax.axvline(2, color="red", linestyle="--", alpha=0.5, linewidth=1)
-            ax.set_ylabel(ylabel)
-            if row == 0:
-                ax.set_title(f"{ds_label}", fontweight="bold")
-            if row == len(metrics) - 1:
-                ax.set_xlabel("tv_iters")
-            if row == 0 and col == len(datasets) - 1:
-                ax.legend(loc="best", framealpha=0.9)
-
-    fig.suptitle("PRISM tv_iters trade-off curve (red dashed = v1 default tv_iters=2)",
-                 fontweight="bold", y=0.995)
-    fig.tight_layout()
-    out_path = out_dir / "prism_tv_iters_tradeoff.png"
-    save_figure(fig, out_path, root_for_print=ROOT)
-
-    rows = []
-    for ds, ds_label in datasets:
-        sub = df[df["dataset"] == ds]
-        for ltv in sorted(sub["lambda_tv"].unique()):
-            slc = sub[sub["lambda_tv"] == ltv].sort_values("tv_iters")
-            row = {"dataset": ds_label, "lambda_tv": ltv}
-            for _, r in slc.iterrows():
-                ti = int(r["tv_iters"])
-                row[f"mae_iter{ti}"] = round(float(r["mae"]), 4)
-                row[f"pearson_iter{ti}"] = round(float(r["pearson_r"]), 3)
-            rows.append(row)
-    summary = pd.DataFrame(rows)
-    summary_path = out_dir / "prism_tv_iters_summary.csv"
-    summary.to_csv(summary_path, index=False, encoding="utf-8-sig")
-    print(f"Saved {summary_path.relative_to(ROOT)}")
+    plot_tv_iters_tradeoff(df, out_dir / "prism_tv_iters_tradeoff.png", root_for_print=ROOT)
+    write_summary(df, datasets, out_dir / "prism_tv_iters_summary.csv")
 
 
 if __name__ == "__main__":

@@ -11,13 +11,11 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from experiments._plot_style import apply_paper_style, save_figure
 from preprocessing.endmembers import build_default_endmember_library
 from preprocessing.preprocess import (
     DEFAULT_INPUT_ROOT,
@@ -27,6 +25,7 @@ from preprocessing.preprocess import (
     preprocess_record,
 )
 from unmixing.unmix import prism_unmix_spectra, unmix_spectra
+from visualization import apply_paper_style, plot_method_abundance_grid
 
 
 DEFAULT_OUTPUT_ROOT = ROOT / "outputs/experiments/prism_real_check"
@@ -158,29 +157,6 @@ def evaluate_method(
     return row, abundance_map
 
 
-def plot_abundance_grid(sample_name: str, component_names: tuple[str, ...], maps: dict[str, np.ndarray],
-                        output_path: Path) -> None:
-    method_order = ["NNLS", "PRISM_OLD", "PRISM_MID", "PRISM_AGG"]
-    n_rows = len(method_order)
-    n_cols = len(component_names)
-    fig, axes = plt.subplots(n_rows, n_cols, figsize=(4.5 * n_cols, 4.0 * n_rows), squeeze=False)
-    for row, method in enumerate(method_order):
-        amap = maps[method]
-        for col, name in enumerate(component_names):
-            ax = axes[row, col]
-            im = ax.imshow(amap[..., col], vmin=0.0, vmax=1.0, cmap="viridis", origin="lower", aspect="equal")
-            if row == 0:
-                ax.set_title(name)
-            if col == 0:
-                ax.set_ylabel(method, fontweight="bold")
-            ax.set_xticks([])
-            ax.set_yticks([])
-            fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
-    fig.suptitle(f"{sample_name} — abundance maps: NNLS vs PRISM variants")
-    fig.tight_layout(rect=(0, 0, 1, 0.97))
-    save_figure(fig, output_path, dpi=140, root_for_print=ROOT)
-
-
 def main() -> None:
     apply_paper_style()
     args = parse_args()
@@ -241,11 +217,12 @@ def main() -> None:
                 "mean_active", "negative_fraction", "elapsed_s"]
         print(df_sample[cols].to_string(index=False, float_format="%.4f"))
 
-        plot_abundance_grid(
+        plot_method_abundance_grid(
             sample_name=sample_name,
             component_names=library.names,
             maps=maps,
             output_path=args.output_root / f"{sample_name}_abundance_grid.png",
+            root_for_print=ROOT,
         )
 
     df_all = pd.DataFrame(all_rows)
