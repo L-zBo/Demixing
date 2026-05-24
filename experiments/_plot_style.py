@@ -121,11 +121,12 @@ def apply_ppt_style() -> None:
     })
 
 
-def save_figure(fig: Figure, out_path: Path, *, root_for_print: Path | None = None) -> None:
+def save_figure(fig: Figure, out_path: Path, *, dpi: int | None = None, root_for_print: Path | None = None) -> None:
     """Create parent dir, save with bbox_inches=tight, close figure, print path."""
     out_path = Path(out_path)
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(out_path)
+    save_kwargs = {"dpi": dpi} if dpi is not None else {}
+    fig.savefig(out_path, **save_kwargs)
     plt.close(fig)
     rel = out_path.relative_to(root_for_print) if root_for_print else out_path
     print(f"Saved {rel}")

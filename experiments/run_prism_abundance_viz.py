@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from experiments._plot_style import apply_paper_style, save_figure
 from preprocessing.endmembers import EndmemberLibrary
 from preprocessing.preprocess import DEFAULT_PROTOCOL_NAME, PREPROCESS_PROTOCOLS, SpectrumRecord, preprocess_record
 from unmixing.unmix import prism_unmix_spectra, unmix_spectra
@@ -117,9 +118,9 @@ def plot_comparison(dataset_name: str, library: EndmemberLibrary, truth: np.ndar
             ax = axes[row, col]
             im = ax.imshow(data, vmin=vmin, vmax=vmax, cmap=cmap, origin="lower", aspect="equal")
             if row == 0:
-                ax.set_title(column_titles[col], fontsize=11)
+                ax.set_title(column_titles[col])
             if col == 0:
-                ax.set_ylabel(name, fontsize=12, fontweight="bold")
+                ax.set_ylabel(name, fontweight="bold")
             ax.set_xticks([])
             ax.set_yticks([])
             fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
@@ -130,15 +131,13 @@ def plot_comparison(dataset_name: str, library: EndmemberLibrary, truth: np.ndar
     fig.suptitle(
         f"{dataset_name}  ({height}×{width} pixels)   "
         f"NNLS MAE={nnls_mae:.4f}   PRISM MAE={prism_mae:.4f}   relative drop={rel_drop:.1f}%",
-        fontsize=14,
     )
     fig.tight_layout(rect=(0, 0, 1, 0.97))
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(output_path, dpi=140, bbox_inches="tight")
-    plt.close(fig)
+    save_figure(fig, output_path, dpi=140, root_for_print=ROOT)
 
 
 def main() -> None:
+    apply_paper_style()
     args = parse_args()
     args.output_root.mkdir(parents=True, exist_ok=True)
     for synthetic_root in args.synthetic_roots:
@@ -170,7 +169,6 @@ def main() -> None:
             width=width,
             output_path=output_path,
         )
-        print(f"[viz] {synthetic_root.name} -> {output_path}")
 
 
 if __name__ == "__main__":

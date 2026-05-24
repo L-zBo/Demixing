@@ -13,8 +13,12 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from experiments._plot_style import apply_paper_style, save_figure
+
 
 def main() -> None:
+    apply_paper_style()
+
     csv_path = ROOT / "outputs/experiments/prism_param_sweep/prism_param_sweep_full.csv"
     out_dir = ROOT / "outputs/showcase/prism_convergence"
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -40,24 +44,21 @@ def main() -> None:
             for color, ltv in zip(cmap, lambda_tvs):
                 slc = sub[sub["lambda_tv"] == ltv].sort_values("tv_iters")
                 ax.plot(slc["tv_iters"], slc[metric], "o-",
-                        color=color, label=f"λ_TV={ltv}", linewidth=1.5, markersize=5)
+                        color=color, label=f"λ_TV={ltv}")
             ax.axvline(2, color="red", linestyle="--", alpha=0.5, linewidth=1)
-            ax.set_ylabel(ylabel, fontsize=10)
+            ax.set_ylabel(ylabel)
             if row == 0:
-                ax.set_title(f"{ds_label}", fontsize=11, fontweight="bold")
+                ax.set_title(f"{ds_label}", fontweight="bold")
             if row == len(metrics) - 1:
-                ax.set_xlabel("tv_iters", fontsize=10)
-            ax.grid(True, alpha=0.3)
+                ax.set_xlabel("tv_iters")
             if row == 0 and col == len(datasets) - 1:
-                ax.legend(fontsize=8, loc="best", framealpha=0.9)
+                ax.legend(loc="best", framealpha=0.9)
 
     fig.suptitle("PRISM tv_iters trade-off curve (red dashed = v1 default tv_iters=2)",
-                 fontsize=12, fontweight="bold", y=0.995)
+                 fontweight="bold", y=0.995)
     fig.tight_layout()
     out_path = out_dir / "prism_tv_iters_tradeoff.png"
-    fig.savefig(out_path, dpi=150, bbox_inches="tight")
-    plt.close(fig)
-    print(f"Saved {out_path.relative_to(ROOT)}")
+    save_figure(fig, out_path, root_for_print=ROOT)
 
     rows = []
     for ds, ds_label in datasets:

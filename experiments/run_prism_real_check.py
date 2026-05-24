@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from experiments._plot_style import apply_paper_style, save_figure
 from preprocessing.endmembers import build_default_endmember_library
 from preprocessing.preprocess import (
     DEFAULT_INPUT_ROOT,
@@ -169,20 +170,19 @@ def plot_abundance_grid(sample_name: str, component_names: tuple[str, ...], maps
             ax = axes[row, col]
             im = ax.imshow(amap[..., col], vmin=0.0, vmax=1.0, cmap="viridis", origin="lower", aspect="equal")
             if row == 0:
-                ax.set_title(name, fontsize=12)
+                ax.set_title(name)
             if col == 0:
-                ax.set_ylabel(method, fontsize=12, fontweight="bold")
+                ax.set_ylabel(method, fontweight="bold")
             ax.set_xticks([])
             ax.set_yticks([])
             fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
-    fig.suptitle(f"{sample_name} — abundance maps: NNLS vs PRISM variants", fontsize=14)
+    fig.suptitle(f"{sample_name} — abundance maps: NNLS vs PRISM variants")
     fig.tight_layout(rect=(0, 0, 1, 0.97))
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(output_path, dpi=140, bbox_inches="tight")
-    plt.close(fig)
+    save_figure(fig, output_path, dpi=140, root_for_print=ROOT)
 
 
 def main() -> None:
+    apply_paper_style()
     args = parse_args()
     args.output_root.mkdir(parents=True, exist_ok=True)
     all_rows: list[dict] = []
