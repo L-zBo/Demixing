@@ -19,7 +19,7 @@ from pathlib import Path
 
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
@@ -72,7 +72,7 @@ def main() -> None:
     if not args.source.exists():
         raise FileNotFoundError(
             f"Source CSV not found: {args.source}. "
-            "Run experiments/run_synthetic_method_comparison.py first."
+            "Run experiments/unmixing_runs/run_synthetic_method_comparison.py first."
         )
 
     df = pd.read_csv(args.source)
