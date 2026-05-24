@@ -39,7 +39,7 @@
 ### 3.1 图① — OLS 在泛化场景下出现非物理负丰度
 
 **文件**：`outputs/showcase/method_constraint_diagnostics/negative_coef_fraction_bars.png`
-**来源**：`experiments/run_method_constraint_diagnostics.py`（v13）
+**来源**：`experiments/diagnostics/run_method_constraint_diagnostics.py`（v13）
 **支撑论点**：论点① — 排除 OLS
 
 **读图说明**：横轴是 19 个 (label, component) 实验场景（包括 PE+淀粉、PP+淀粉、test 三元混合、以及展艺/新良/甘汁园三种淀粉的泛化场景），纵轴是该场景下"逐像素负丰度系数"占比（0~1）。每组 4 根柱对应 OLS / NNLS / FCLS / NMF。
@@ -60,7 +60,7 @@
 ### 3.2 图② — 合成真值上 MAE / RMSE / R² 三联子图
 
 **文件**：`outputs/showcase/synthetic_method_comparison/synthetic_metric_comparison.png`
-**来源**：`experiments/run_synthetic_metric_plot.py`（本轮新增，读 v9 合成真值 csv）
+**来源**：`experiments/plotting/run_synthetic_metric_plot.py`（本轮新增，读 v9 合成真值 csv）
 **支撑论点**：论点① — NNLS / FCLS 优于 NMF，NNLS ≈ FCLS
 
 **读图说明**：三联子图（独立 Y 轴避免不同量级压缩）。横轴均为四方法 OLS / NNLS / FCLS / NMF。
@@ -94,7 +94,7 @@
 ### 3.3 图③ — NMF 学到的端元偏离物理参考
 
 **文件**：`outputs/showcase/method_constraint_diagnostics/nmf_endmember_sam_bars.png`
-**来源**：`experiments/run_method_constraint_diagnostics.py`（v13）
+**来源**：`experiments/diagnostics/run_method_constraint_diagnostics.py`（v13）
 **支撑论点**：论点① — 排除 NMF（端元不可信）
 
 **读图说明**：横轴是 (sample, endmember) 场景列表（与图① 同），纵轴是 NMF 学到的端元谱与物理参考端元谱之间的 **SAM（Spectral Angle Mapper / 光谱角，单位弧度）**。SAM 越小，学到的端元越接近物理参考；SAM 越大，越偏离。
@@ -119,7 +119,7 @@
 ### 3.4 表 — 解混整体表现汇总
 
 **文件**：`outputs/showcase/method_comparison/method_overall_summary.csv`
-**来源**：`experiments/run_overall_summary.py`（本轮新增，综合 v8 + v9 + v13）
+**来源**：`experiments/diagnostics/run_overall_summary.py`（本轮新增，综合 v8 + v9 + v13）
 **支撑论点**：论点① 综合视角，避免单一指标遮蔽
 
 **结构**：9 行 7 维度，每行 (dimension, metric, direction, OLS, NNLS, FCLS, NMF, best_method, note)。`best_method` 自动判定，`note` 列写明数据来源 + 解读注意事项。
@@ -144,7 +144,7 @@
 
 ### 3.5 论点③ — PRISM 进一步降低假阳性 + 空间一致性
 
-**来源**：`unmixing/unmix.py::prism_unmix_spectra` + `experiments/run_prism_real_check.py` + `run_prism_absent_check.py` + `run_prism_synth_std_vs_uni.py`
+**来源**：`unmixing/unmix.py::prism_unmix_spectra` + `experiments/prism_tuning/run_prism_real_check.py` + `run_prism_absent_check.py` + `run_prism_synth_std_vs_uni.py`
 **支撑论点**：论点③ — 在 NNLS 已经满足"非负 + 经典物理解释"基础上，PRISM 通过三项物理正则进一步压制噪声与端元歧义偏置
 
 #### 3.5.1 PRISM 方法位置（NNLS 的物理正则化扩展）
@@ -191,7 +191,7 @@ PRISM 实验产物已全部就绪（`outputs/experiments/prism_*`），WP-5 阶�
 #### 3.5.6 7 方法横向总表（论文 §3 主表数据源）
 
 **文件**：`outputs/showcase/method_comparison/seven_method_synth_summary.csv`
-**来源**：`experiments/run_overall_summary.py::build_seven_method_synthetic_summary`（聚合 `mcr_als_check/mcr_als_check_summary.csv`）
+**来源**：`experiments/diagnostics/run_overall_summary.py::build_seven_method_synthetic_summary`（聚合 `mcr_als_check/mcr_als_check_summary.csv`）
 **数据集**：合成 NOISY 40×40 三组分（PE / PP / starch）
 
 | metric | OLS | NNLS | FCLS | NMF | MCR-ALS-hard | MCR-ALS-semi | **PRISM** | best |

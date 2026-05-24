@@ -33,7 +33,7 @@ generator.py 生成 (abundance, spectra) 配对
     ↓
 generate_dataset.py 落盘到 outputs/synthetic_datasets/<name>/
     ↓
-experiments/run_synthetic_method_comparison.py 跑四方法对比
+experiments/unmixing_runs/run_synthetic_method_comparison.py 跑四方法对比
 ```
 
 ---

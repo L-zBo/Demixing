@@ -96,17 +96,13 @@ Unmixing/
 │   ├── reconstruction/        # 输入谱与重构谱对比
 │   ├── method_comparison/     # 方法横向对比柱图
 │   └── preprocessing/         # 预处理协议对比三视图与丰度网格
-├── experiments/               # 主线 NNLS 实验入口（平铺，按用途命名）
-│   ├── run_real_unmixing_single.py
-│   ├── run_real_method_comparison.py
-│   ├── run_batch_method_comparison.py
-│   ├── run_synthetic_method_comparison.py
-│   ├── run_real_preprocessing_comparison.py
-│   ├── run_batch_preprocessing_comparison.py
-│   ├── run_generalization_batch.py
-│   ├── run_endmember_fingerprint_plot.py
-│   ├── run_method_constraint_diagnostics.py
-│   └── run_protocol_consistency_analysis.py
+├── experiments/               # 实验入口（按业务分 6 子目录）
+│   ├── unmixing_runs/         # 解混入口（单图/多图/合成真值，OLS/NNLS/FCLS/NMF）
+│   ├── preprocessing_runs/    # 预处理协议对比（als_l2/als_max/none_l2）
+│   ├── diagnostics/           # 诊断/汇总（端元指纹、负丰度率、协议一致性、MCR-ALS 对照、7 方法总表）
+│   ├── prism_tuning/          # PRISM 调参/消融/真实样本检查
+│   ├── generalization/        # 跨淀粉源泛化
+│   └── plotting/              # 纯绘图入口（读 csv → 调 visualization.* 出图）
 ├── utils/                     # 通用 IO 工具（save_predictions / save_experiment_summary）
 ├── archive/                   # 历史归档（不参与主线）
 │   ├── legacy_classification/ # 旧家族分类路线（v1~v5、external_test）
@@ -124,22 +120,22 @@ Unmixing/
 
 | 维度 | 入口脚本 | 输出位置 |
 |---|---|---|
-| 单图解混 | `experiments/run_real_unmixing_single.py` | `outputs/real_unmixing_single/` |
-| 单图四方法对比 | `experiments/run_real_method_comparison.py` | `outputs/real_method_comparison/` |
-| 多图四方法批量 | `experiments/run_batch_method_comparison.py` | `outputs/batch_method_comparison/` |
-| 合成真值四方法 | `experiments/run_synthetic_method_comparison.py` | `outputs/synthetic_method_comparison/` |
-| 单图三协议对比 | `experiments/run_real_preprocessing_comparison.py` | `outputs/real_preprocessing_comparison/` |
-| 多图三协议批量 | `experiments/run_batch_preprocessing_comparison.py` | `outputs/batch_preprocessing_comparison/` |
-| 跨淀粉源泛化 | `experiments/run_generalization_batch.py` | `outputs/generalization_batch/` |
-| 端元指纹峰可视化 | `experiments/run_endmember_fingerprint_plot.py` | `outputs/experiments/endmember_fingerprint/` |
-| 方法约束诊断（OLS 负值率 / NMF 端元 SAM / NNLS 稀疏度） | `experiments/run_method_constraint_diagnostics.py` | `outputs/experiments/method_constraint_diagnostics/` |
-| 协议一致性（CV + 指纹峰保留） | `experiments/run_protocol_consistency_analysis.py` | `outputs/experiments/protocol_consistency/` |
-| **PRISM 合成快速验证** | `experiments/run_prism_quick_check.py` | `outputs/experiments/prism_quick_check*/` |
-| **PRISM 真实样本对比** | `experiments/run_prism_real_check.py` | `outputs/experiments/prism_real_check/` |
-| **PRISM 丰度图可视化** | `experiments/run_prism_abundance_viz.py` | `outputs/experiments/prism_abundance_viz*/` |
-| **PRISM 超参网格扫描** | `experiments/run_prism_param_sweep.py` | `outputs/experiments/prism_param_sweep/` |
-| **PRISM absent_load 物理一致性** | `experiments/run_prism_absent_check.py` | `outputs/experiments/prism_absent_check/` |
-| **PRISM 加权策略消融（STD vs UNI）** | `experiments/run_prism_synth_std_vs_uni.py` | `outputs/experiments/prism_synth_std_vs_uni/` |
+| 单图解混 | `experiments/unmixing_runs/run_real_unmixing_single.py` | `outputs/real_unmixing_single/` |
+| 单图四方法对比 | `experiments/unmixing_runs/run_real_method_comparison.py` | `outputs/real_method_comparison/` |
+| 多图四方法批量 | `experiments/unmixing_runs/run_batch_method_comparison.py` | `outputs/batch_method_comparison/` |
+| 合成真值四方法 | `experiments/unmixing_runs/run_synthetic_method_comparison.py` | `outputs/synthetic_method_comparison/` |
+| 单图三协议对比 | `experiments/preprocessing_runs/run_real_preprocessing_comparison.py` | `outputs/real_preprocessing_comparison/` |
+| 多图三协议批量 | `experiments/preprocessing_runs/run_batch_preprocessing_comparison.py` | `outputs/batch_preprocessing_comparison/` |
+| 跨淀粉源泛化 | `experiments/generalization/run_generalization_batch.py` | `outputs/generalization_batch/` |
+| 端元指纹峰可视化 | `experiments/diagnostics/run_endmember_fingerprint_plot.py` | `outputs/experiments/endmember_fingerprint/` |
+| 方法约束诊断（OLS 负值率 / NMF 端元 SAM / NNLS 稀疏度） | `experiments/diagnostics/run_method_constraint_diagnostics.py` | `outputs/experiments/method_constraint_diagnostics/` |
+| 协议一致性（CV + 指纹峰保留） | `experiments/diagnostics/run_protocol_consistency_analysis.py` | `outputs/experiments/protocol_consistency/` |
+| **PRISM 合成快速验证** | `experiments/prism_tuning/run_prism_quick_check.py` | `outputs/experiments/prism_quick_check*/` |
+| **PRISM 真实样本对比** | `experiments/prism_tuning/run_prism_real_check.py` | `outputs/experiments/prism_real_check/` |
+| **PRISM 丰度图可视化** | `experiments/prism_tuning/run_prism_abundance_viz.py` | `outputs/experiments/prism_abundance_viz*/` |
+| **PRISM 超参网格扫描** | `experiments/prism_tuning/run_prism_param_sweep.py` | `outputs/experiments/prism_param_sweep/` |
+| **PRISM absent_load 物理一致性** | `experiments/prism_tuning/run_prism_absent_check.py` | `outputs/experiments/prism_absent_check/` |
+| **PRISM 加权策略消融（STD vs UNI）** | `experiments/prism_tuning/run_prism_synth_std_vs_uni.py` | `outputs/experiments/prism_synth_std_vs_uni/` |
 
 详细说明见 [docs/nnls_unmixing_flow.md](docs/nnls_unmixing_flow.md)（经典解混主线）与 [docs/prism_method.md](docs/prism_method.md)（PRISM 方法）。
 

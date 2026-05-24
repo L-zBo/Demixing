@@ -210,9 +210,9 @@
 
 #### 正式实验脚本
 
-- `experiments/run_synthetic_method_comparison.py`
+- `experiments/unmixing_runs/run_synthetic_method_comparison.py`
   合成真值数据上的四方法对比
-- `experiments/run_real_unmixing_single.py`
+- `experiments/unmixing_runs/run_real_unmixing_single.py`
   真实数据上的解混、重构和空间图输出
 
 实验产物默认输出到 `outputs/experiments/`、`outputs/<scenario>/` 等场景目录。
@@ -375,28 +375,28 @@
 
 **真实面扫图主线**
 
-- `experiments/run_real_unmixing_single.py` — 单张图跑`OLS / NNLS / FCLS / NMF`
-- `experiments/run_real_method_comparison.py` — 单图四方法详细对比（含图）
-- `experiments/run_batch_method_comparison.py` — 多张典型图四方法批量对比
+- `experiments/unmixing_runs/run_real_unmixing_single.py` — 单张图跑`OLS / NNLS / FCLS / NMF`
+- `experiments/unmixing_runs/run_real_method_comparison.py` — 单图四方法详细对比（含图）
+- `experiments/unmixing_runs/run_batch_method_comparison.py` — 多张典型图四方法批量对比
 
 **合成真值定量**
 
-- `experiments/run_synthetic_method_comparison.py` — 合成真值上四方法定量对比
+- `experiments/unmixing_runs/run_synthetic_method_comparison.py` — 合成真值上四方法定量对比
 
 **预处理协议对比**
 
-- `experiments/run_real_preprocessing_comparison.py` — 单图三协议对比
-- `experiments/run_batch_preprocessing_comparison.py` — 多图三协议批量
+- `experiments/preprocessing_runs/run_real_preprocessing_comparison.py` — 单图三协议对比
+- `experiments/preprocessing_runs/run_batch_preprocessing_comparison.py` — 多图三协议批量
 
 **泛化稳定性**
 
-- `experiments/run_generalization_batch.py` — 跨淀粉来源泛化批量评估
+- `experiments/generalization/run_generalization_batch.py` — 跨淀粉来源泛化批量评估
 
 **PPT 证据补强（v13~v15）**
 
-- `experiments/run_endmember_fingerprint_plot.py` — 端元纯谱 + 文献指纹峰标注
-- `experiments/run_method_constraint_diagnostics.py` — 逐像素负丰度率 / `NMF`端元`SAM` / `NNLS`稀疏度
-- `experiments/run_protocol_consistency_analysis.py` — 三协议下逐像素`CV` + 指纹峰保留率
+- `experiments/diagnostics/run_endmember_fingerprint_plot.py` — 端元纯谱 + 文献指纹峰标注
+- `experiments/diagnostics/run_method_constraint_diagnostics.py` — 逐像素负丰度率 / `NMF`端元`SAM` / `NNLS`稀疏度
+- `experiments/diagnostics/run_protocol_consistency_analysis.py` — 三协议下逐像素`CV` + 指纹峰保留率
 
 通用能力：
 
@@ -496,12 +496,12 @@
 - 旧的 `ALS + max` 没有删，继续保留作后续对比
 - `preprocessing/preprocess.py` 已经支持 `als_l2`、`als_max`、`none_l2`
 - `preprocessing/endmembers.py` 已经支持按预处理协议加载端元
-- 已新增 `experiments/run_real_preprocessing_comparison.py`，可固定解混方法对比不同预处理协议
-- 已新增 `experiments/run_batch_preprocessing_comparison.py`，可在多张典型图上批量汇总预处理对比结果
+- 已新增 `experiments/preprocessing_runs/run_real_preprocessing_comparison.py`，可固定解混方法对比不同预处理协议
+- 已新增 `experiments/preprocessing_runs/run_batch_preprocessing_comparison.py`，可在多张典型图上批量汇总预处理对比结果
 - 已新增 `synthetic/generator.py` 和 `synthetic/generate_dataset.py`，用于生成有真值的二维合成解混数据
-- 已新增 `experiments/run_synthetic_method_comparison.py`，用于在合成真值数据上比较 `OLS/NNLS/FCLS/NMF`
+- 已新增 `experiments/unmixing_runs/run_synthetic_method_comparison.py`，用于在合成真值数据上比较 `OLS/NNLS/FCLS/NMF`
 - 合成真值评估口径已分层为 orig/proj/重构三层指标（v9 校准）
-- 已新增 `experiments/run_generalization_batch.py`，用于在 `dataset/泛化/` 不同淀粉来源上做批量解混评估
+- 已新增 `experiments/generalization/run_generalization_batch.py`，用于在 `dataset/泛化/` 不同淀粉来源上做批量解混评估
 - 仓库结构已整体重构：主线代码从 `src/demixing/` 与 `scripts/` 平铺到 `preprocessing/`、`synthetic/`、`unmixing/`、`visualization/`、`experiments/`、`utils/` 六个顶层目录；旧分类路线整体归档到 `archive/legacy_classification/`
 - 已新增`v13 / v14 / v15`三类`PPT`证据脚本：方法约束诊断（`run_method_constraint_diagnostics.py`）、协议一致性（`run_protocol_consistency_analysis.py`）、端元指纹峰图（`run_endmember_fingerprint_plot.py`），分别对应`outputs/showcase/method_constraint_diagnostics / protocol_consistency / endmember_fingerprint/`三个展示子目录
 - `visualization/method_comparison/`新增`constraint_diagnostics.py`、`visualization/preprocessing/`新增`endmember_fingerprint.py / protocol_consistency.py`，顶层`__init__.py`同步`re-export`，当前共`14`个绘图函数
@@ -529,13 +529,13 @@
 
 ### 15.3新增 PRISM 实验脚本（6 个）
 
-- `experiments/run_prism_quick_check.py` — 合成数据快速验证
-- `experiments/run_prism_abundance_viz.py` — 丰度图对比可视化
-- `experiments/run_prism_param_sweep.py` — 34 配置超参网格扫描
-- `experiments/run_prism_real_check.py` — 3 个真实样本对比
-- `experiments/run_prism_absent_check.py` — absent_load 物理一致性测试（"不应有 PE" 的假阳性率）
-- `experiments/run_prism_synth_std_vs_uni.py` — 加权策略消融
-- `experiments/run_mcr_als_check.py` — MCR-ALS hard / semi-blind 对比
+- `experiments/prism_tuning/run_prism_quick_check.py` — 合成数据快速验证
+- `experiments/prism_tuning/run_prism_abundance_viz.py` — 丰度图对比可视化
+- `experiments/prism_tuning/run_prism_param_sweep.py` — 34 配置超参网格扫描
+- `experiments/prism_tuning/run_prism_real_check.py` — 3 个真实样本对比
+- `experiments/prism_tuning/run_prism_absent_check.py` — absent_load 物理一致性测试（"不应有 PE" 的假阳性率）
+- `experiments/prism_tuning/run_prism_synth_std_vs_uni.py` — 加权策略消融
+- `experiments/diagnostics/run_mcr_als_check.py` — MCR-ALS hard / semi-blind 对比
 
 ### 15.4新增 PRISM 实验产物目录
 

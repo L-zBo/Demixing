@@ -284,12 +284,12 @@ result = prism_unmix_spectra(
 ## 9. 相关脚本
 
 - `unmixing/unmix.py::prism_unmix_spectra` — 主实现
-- `experiments/run_prism_quick_check.py` — 合成数据快速验证
-- `experiments/run_prism_abundance_viz.py` — 丰度图对比可视化
-- `experiments/run_prism_param_sweep.py` — 超参网格扫描
-- `experiments/run_prism_real_check.py` — 真实样本对比
-- `experiments/run_prism_absent_check.py` — absent_load 物理一致性测试
-- `experiments/run_prism_synth_std_vs_uni.py` — 加权策略消融
+- `experiments/prism_tuning/run_prism_quick_check.py` — 合成数据快速验证
+- `experiments/prism_tuning/run_prism_abundance_viz.py` — 丰度图对比可视化
+- `experiments/prism_tuning/run_prism_param_sweep.py` — 超参网格扫描
+- `experiments/prism_tuning/run_prism_real_check.py` — 真实样本对比
+- `experiments/prism_tuning/run_prism_absent_check.py` — absent_load 物理一致性测试
+- `experiments/prism_tuning/run_prism_synth_std_vs_uni.py` — 加权策略消融
 
 ---
 
