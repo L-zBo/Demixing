@@ -63,7 +63,7 @@ Quantitative Raman detection of polyolefin microplastics (PE / PP) in food matri
 | OLS 最坏 76.5% 负丰度 | `outputs/showcase/method_constraints/negative_coef_fraction_bars.png` (v13) |
 | NMF 端元 SAM 0.40 rad | `outputs/showcase/method_constraints/nmf_endmember_sam_bars.png` (v13) |
 | NNLS / FCLS 合成 MAE / RMSE / R² | `outputs/showcase/synthetic_truth/synthetic_method_comparison_summary.csv` (v9) |
-| PRISM vs NNLS 真实 spatial_TV 41~65% | `outputs/experiments/prism_real_check/*_metrics.csv` |
+| PRISM vs NNLS 真实 spatial_TV 41~65% | `outputs/experiments/prism_real_check/prism_real_check_summary.csv` |
 | PRISM PP+淀粉 frac>10% 从 0.13% → 0% | `outputs/experiments/prism_absent_check/prism_absent_check_summary.csv` |
 | PRISM 合成 NOISY MAE 0.0515 → 0.0441 | `outputs/experiments/prism_quick_check_formal_v1/prism_quick_check_summary.csv` |
 | PRISM 加权策略消融 | `outputs/experiments/prism_synth_std_vs_uni/prism_synth_std_vs_uni_summary.csv` |
