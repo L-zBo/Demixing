@@ -20,9 +20,9 @@
 
 | # | 文件 | 论证 |
 |---|---|---|
-| 图① | `outputs/showcase/method_constraints/negative_coef_fraction_bars.png` | OLS 物理性差 |
-| 图② | `outputs/showcase/synthetic_truth/synthetic_metric_comparison.png` | 合成真值 MAE / RMSE / R² 三联子图 |
-| 图③ | `outputs/showcase/method_constraints/nmf_endmember_sam_bars.png` | NMF 端元偏离物理 |
+| 图① | `outputs/showcase/method_constraint_diagnostics/negative_coef_fraction_bars.png` | OLS 物理性差 |
+| 图② | `outputs/showcase/synthetic_method_comparison/synthetic_metric_comparison.png` | 合成真值 MAE / RMSE / R² 三联子图 |
+| 图③ | `outputs/showcase/method_constraint_diagnostics/nmf_endmember_sam_bars.png` | NMF 端元偏离物理 |
 | 表 | `outputs/showcase/method_comparison/method_overall_summary.csv` | 9 行 7 维度全维度汇总 |
 
 ### 论点② — ALS+L2 是 NNLS 解混的数学规范选择
@@ -71,14 +71,16 @@
 Unmixing/
 ├── README.md                  # 项目总览（本文件）
 ├── AGENTS.md                  # 协作与提交规范
-├── 项目结构说明.md            # 仓库结构详解
-├── 论证总览.md                # PPT / 论文图表索引与引用映射（写 PPT / 论文时看这份）
-├── docs/                      # 详细路线说明
+├── requirements.txt           # Python 依赖锁定
+├── docs/                      # 详细路线说明 + 论证统稿 + 顶层结构说明
+│   ├── 论证总览.md            # PPT / 论文图表索引与引用映射（写 PPT / 论文时看这份）
+│   ├── 项目结构说明.md        # 仓库结构详解
 │   ├── nnls_unmixing_flow.md  # 主线：NNLS 解混落地说明
 │   ├── legacy_classification_flow.md  # 旧路线：家族分类 + 组级空间评估
 │   ├── prism_method.md        # PRISM 方法完整说明（数学公式 + 参数扫描 + 加权消融）
 │   ├── thesis_abstract.md     # 论文摘要草稿（中文 200/300 字 + 英文 + 关键词）
-│   └── thesis_chapter1_figures.md  # 论证统稿（200~400 字读图说明 + 论文写作 checklist）
+│   ├── thesis_chapter1_figures.md  # 论证统稿（200~400 字读图说明 + 论文写作 checklist）
+│   └── thesis_chapter3_experiments.md  # 实验摘要 + 核心结果速览
 ├── preprocessing/             # 端元加载、协议化预处理（als_l2/als_max/none_l2）
 │   ├── endmembers.py
 │   ├── preprocess.py
@@ -129,9 +131,9 @@ Unmixing/
 | 单图三协议对比 | `experiments/run_real_preprocessing_comparison.py` | `outputs/real_preprocessing_comparison/` |
 | 多图三协议批量 | `experiments/run_batch_preprocessing_comparison.py` | `outputs/batch_preprocessing_comparison/` |
 | 跨淀粉源泛化 | `experiments/run_generalization_batch.py` | `outputs/generalization_batch/` |
-| 端元指纹峰可视化 | `experiments/run_endmember_fingerprint_plot.py` | `outputs/experiments/formal_v15_endmember_fingerprint/` |
-| 方法约束诊断（OLS 负值率 / NMF 端元 SAM / NNLS 稀疏度） | `experiments/run_method_constraint_diagnostics.py` | `outputs/experiments/formal_v13_method_constraint_diagnostics/` |
-| 协议一致性（CV + 指纹峰保留） | `experiments/run_protocol_consistency_analysis.py` | `outputs/experiments/formal_v14_protocol_consistency/` |
+| 端元指纹峰可视化 | `experiments/run_endmember_fingerprint_plot.py` | `outputs/experiments/endmember_fingerprint/` |
+| 方法约束诊断（OLS 负值率 / NMF 端元 SAM / NNLS 稀疏度） | `experiments/run_method_constraint_diagnostics.py` | `outputs/experiments/method_constraint_diagnostics/` |
+| 协议一致性（CV + 指纹峰保留） | `experiments/run_protocol_consistency_analysis.py` | `outputs/experiments/protocol_consistency/` |
 | **PRISM 合成快速验证** | `experiments/run_prism_quick_check.py` | `outputs/experiments/prism_quick_check*/` |
 | **PRISM 真实样本对比** | `experiments/run_prism_real_check.py` | `outputs/experiments/prism_real_check/` |
 | **PRISM 丰度图可视化** | `experiments/run_prism_abundance_viz.py` | `outputs/experiments/prism_abundance_viz*/` |

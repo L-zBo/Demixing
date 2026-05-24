@@ -409,16 +409,16 @@
 
 当前新增脚本只写入新结果目录，不覆盖原始数据，主要输出到：
 
-- `outputs/experiments/formal_v6_classical_unmixing_real/`
-- `outputs/experiments/formal_v7_method_comparison_real/`
-- `outputs/experiments/formal_v8_batch_method_comparison/`
-- `outputs/experiments/formal_v9_synthetic_method_comparison/`
-- `outputs/experiments/formal_v10_preprocessing_comparison_real/`
-- `outputs/experiments/formal_v11_batch_preprocessing_comparison/`
-- `outputs/experiments/formal_v12_generalization_batch/`
-- `outputs/experiments/formal_v13_method_constraint_diagnostics/`
-- `outputs/experiments/formal_v14_protocol_consistency/`
-- `outputs/experiments/formal_v15_endmember_fingerprint/`
+- `outputs/experiments/classical_unmixing_real/`
+- `outputs/experiments/method_comparison_real/`
+- `outputs/experiments/batch_method_comparison/`
+- `outputs/experiments/synthetic_method_comparison/`
+- `outputs/experiments/preprocessing_comparison_real/`
+- `outputs/experiments/batch_preprocessing_comparison/`
+- `outputs/experiments/generalization_batch/`
+- `outputs/experiments/method_constraint_diagnostics/`
+- `outputs/experiments/protocol_consistency/`
+- `outputs/experiments/endmember_fingerprint/`
 - `outputs/showcase/`（从上述目录筛出的展示型结果包）
 
 ### 11.6当前仍未完成的部分
@@ -503,7 +503,7 @@
 - 合成真值评估口径已分层为 orig/proj/重构三层指标（v9 校准）
 - 已新增 `experiments/run_generalization_batch.py`，用于在 `dataset/泛化/` 不同淀粉来源上做批量解混评估
 - 仓库结构已整体重构：主线代码从 `src/demixing/` 与 `scripts/` 平铺到 `preprocessing/`、`synthetic/`、`unmixing/`、`visualization/`、`experiments/`、`utils/` 六个顶层目录；旧分类路线整体归档到 `archive/legacy_classification/`
-- 已新增`v13 / v14 / v15`三类`PPT`证据脚本：方法约束诊断（`run_method_constraint_diagnostics.py`）、协议一致性（`run_protocol_consistency_analysis.py`）、端元指纹峰图（`run_endmember_fingerprint_plot.py`），分别对应`outputs/showcase/method_constraints / protocol_consistency / endmember_fingerprint/`三个展示子目录
+- 已新增`v13 / v14 / v15`三类`PPT`证据脚本：方法约束诊断（`run_method_constraint_diagnostics.py`）、协议一致性（`run_protocol_consistency_analysis.py`）、端元指纹峰图（`run_endmember_fingerprint_plot.py`），分别对应`outputs/showcase/method_constraint_diagnostics / protocol_consistency / endmember_fingerprint/`三个展示子目录
 - `visualization/method_comparison/`新增`constraint_diagnostics.py`、`visualization/preprocessing/`新增`endmember_fingerprint.py / protocol_consistency.py`，顶层`__init__.py`同步`re-export`，当前共`14`个绘图函数
 
 当前还需要继续补强的重点：
@@ -540,7 +540,7 @@
 ### 15.4新增 PRISM 实验产物目录
 
 - `outputs/experiments/prism_quick_check*/` / `prism_abundance_viz*/` / `prism_param_sweep/` / `prism_real_check/` / `prism_absent_check/` / `prism_synth_std_vs_uni/`
-- `outputs/experiments/mcr_als_check_formal_v1/`
+- `outputs/experiments/mcr_als_check/`
 
 ### 15.5新增文档
 

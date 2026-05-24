@@ -23,7 +23,7 @@
 
 | 文件 | 用途 | 主要产物 |
 |---|---|---|
-| `run_mcr_als_check.py` | hard-constrained（端元锁死 = NNLS）+ semi-blind（端元 init 但漂移到 Pearson r ≈ 0 灾难） | `outputs/experiments/mcr_als_check_formal_v1/` |
+| `run_mcr_als_check.py` | hard-constrained（端元锁死 = NNLS）+ semi-blind（端元 init 但漂移到 Pearson r ≈ 0 灾难） | `outputs/experiments/mcr_als_check/` |
 
 ### 3. 经典 4 方法主线对比（4 个）
 
@@ -51,10 +51,10 @@
 
 | 文件 | 用途 | 主要产物 |
 |---|---|---|
-| `run_endmember_fingerprint_plot.py` | 三端元纯谱叠加 + 文献指纹峰标注（物理基础页） | `outputs/experiments/formal_v15_endmember_fingerprint/` |
-| `run_method_constraint_diagnostics.py` | 逐像素负丰度率 / NMF 端元 SAM / NNLS 稀疏度 | `outputs/experiments/formal_v13_method_constraint_diagnostics/` |
-| `run_protocol_consistency_analysis.py` | 三协议下逐像素 CV + 指纹峰保留率 | `outputs/experiments/formal_v14_protocol_consistency/` |
-| `run_synthetic_metric_plot.py` | 合成真值 MAE/RMSE/R² 三联子图（v9 后续出图） | `outputs/showcase/synthetic_truth/` |
+| `run_endmember_fingerprint_plot.py` | 三端元纯谱叠加 + 文献指纹峰标注（物理基础页） | `outputs/experiments/endmember_fingerprint/` |
+| `run_method_constraint_diagnostics.py` | 逐像素负丰度率 / NMF 端元 SAM / NNLS 稀疏度 | `outputs/experiments/method_constraint_diagnostics/` |
+| `run_protocol_consistency_analysis.py` | 三协议下逐像素 CV + 指纹峰保留率 | `outputs/experiments/protocol_consistency/` |
+| `run_synthetic_metric_plot.py` | 合成真值 MAE/RMSE/R² 三联子图（v9 后续出图） | `outputs/showcase/synthetic_method_comparison/` |
 | `run_prism_convergence_plot.py` | tv_iters trade-off 收敛曲线（反驳 ADMM 收敛性质疑） | `outputs/showcase/prism_convergence/` |
 
 ### 7. 跨实验汇总（1 个，单一事实源）

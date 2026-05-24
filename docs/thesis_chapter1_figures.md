@@ -38,7 +38,7 @@
 
 ### 3.1 图① — OLS 在泛化场景下出现非物理负丰度
 
-**文件**：`outputs/showcase/method_constraints/negative_coef_fraction_bars.png`
+**文件**：`outputs/showcase/method_constraint_diagnostics/negative_coef_fraction_bars.png`
 **来源**：`experiments/run_method_constraint_diagnostics.py`（v13）
 **支撑论点**：论点① — 排除 OLS
 
@@ -59,7 +59,7 @@
 
 ### 3.2 图② — 合成真值上 MAE / RMSE / R² 三联子图
 
-**文件**：`outputs/showcase/synthetic_truth/synthetic_metric_comparison.png`
+**文件**：`outputs/showcase/synthetic_method_comparison/synthetic_metric_comparison.png`
 **来源**：`experiments/run_synthetic_metric_plot.py`（本轮新增，读 v9 合成真值 csv）
 **支撑论点**：论点① — NNLS / FCLS 优于 NMF，NNLS ≈ FCLS
 
@@ -68,7 +68,7 @@
 - 中：RMSE（均方根误差）↓ 越低越好
 - 右：R²（Pearson²，决定系数）↑ 越高越好
 
-**关键数字**（数据源 `outputs/showcase/synthetic_truth/synthetic_method_comparison_summary.csv`）：
+**关键数字**（数据源 `outputs/showcase/synthetic_method_comparison/synthetic_method_comparison_summary.csv`）：
 
 | 方法 | MAE | RMSE | R² |
 |---|---|---|---|
@@ -93,7 +93,7 @@
 
 ### 3.3 图③ — NMF 学到的端元偏离物理参考
 
-**文件**：`outputs/showcase/method_constraints/nmf_endmember_sam_bars.png`
+**文件**：`outputs/showcase/method_constraint_diagnostics/nmf_endmember_sam_bars.png`
 **来源**：`experiments/run_method_constraint_diagnostics.py`（v13）
 **支撑论点**：论点① — 排除 NMF（端元不可信）
 
@@ -191,7 +191,7 @@ PRISM 实验产物已全部就绪（`outputs/experiments/prism_*`），WP-5 阶�
 #### 3.5.6 7 方法横向总表（论文 §3 主表数据源）
 
 **文件**：`outputs/showcase/method_comparison/seven_method_synth_summary.csv`
-**来源**：`experiments/run_overall_summary.py::build_seven_method_synthetic_summary`（聚合 `mcr_als_check_formal_v1/mcr_als_check_summary.csv`）
+**来源**：`experiments/run_overall_summary.py::build_seven_method_synthetic_summary`（聚合 `mcr_als_check/mcr_als_check_summary.csv`）
 **数据集**：合成 NOISY 40×40 三组分（PE / PP / starch）
 
 | metric | OLS | NNLS | FCLS | NMF | MCR-ALS-hard | MCR-ALS-semi | **PRISM** | best |
@@ -321,10 +321,10 @@ als_max 重构 R²：            0.923（与 als_l2 平手）
 |---|---|
 | 被问"为啥不用 als_max" | `outputs/showcase/protocol_consistency/preprocessing_overall_summary.csv` + 本文 §4 |
 | 被问"为啥不用 FCLS" | `outputs/showcase/method_comparison/method_overall_summary.csv` 第 1-3 行（FCLS 略胜但 NNLS 更简洁稀疏） + 本文 §3.2 |
-| 被问"为啥真实数据 NMF 重构最好却不用" | `outputs/showcase/method_constraints/nmf_endmember_sam_bars.png` + 本文 §3.3（端元偏离） |
+| 被问"为啥真实数据 NMF 重构最好却不用" | `outputs/showcase/method_constraint_diagnostics/nmf_endmember_sam_bars.png` + 本文 §3.3（端元偏离） |
 | 被问"端元谱怎么来的" | `outputs/showcase/endmember_fingerprint/endmember_fingerprints.png` (v15) + `preprocessing/endmembers.py` |
 | 被问"跨淀粉源泛化稳不稳" | `outputs/showcase/generalization/generalization_batch_summary.csv` (v12) |
-| 被问"测试集长啥样" | `outputs/showcase/testset_gallery/` (9 张方法对比图) |
+| 被问"测试集长啥样" | `outputs/showcase/testset_unmixing_gallery/` (9 张方法对比图) |
 
 ---
 
